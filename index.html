@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Sejarah Indonesia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5rem; /* Menggunakan rem untuk font size */
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .question {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .question h3 {
+            font-size: 1rem; /* Menggunakan rem untuk font size */
+            margin-bottom: 5px;
+            color: #34495e;
+        }
+        .options label {
+            display: block;
+            font-size: 0.9rem; /* Menggunakan rem untuk font size */
+            color: #555;
+            padding: 5px 0;
+        }
+        .feedback {
+            margin-top: 5px;
+            font-size: 0.8rem; /* Menggunakan rem untuk font size */
+            font-weight: bold;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .correct {
+            color: #27ae60;
+            background-color: #e8f6ef;
+        }
+        .incorrect {
+            color: #e74c3c;
+            background-color: #fdedec;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem; /* Menggunakan rem untuk font size */
+            font-weight: bold;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Media Queries untuk Responsivitas */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.3rem;
+            }
+            .question h3 {
+                font-size: 1rem;
+            }
+            .options label {
+                font-size: 0.85rem;
+            }
+            button {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+            .question h3 {
+                font-size: 0.95rem;
+            }
+            .options label {
+                font-size: 0.8rem;
+            }
+            button {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sejarah Indonesia</h1>
+        <div id="quizContainer"></div>
+        <button id="submitButton" onclick="checkAnswers()">Lihat Kunci Jawaban</button>
+        <button id="nextButton" onclick="loadNextSet()" style="display: none;">Lanjut</button>
+    </div>
+
+    <script>
+        const questions = [
+    {
+        "question": "1. Sejarah berasal dari Bahasa Arab Syajarotun yang berarti pohon, Adapun pengertian sejarah menurut istilah dijelaskan dengan pernyataan berikut…",
+        "options": [
+            { "label": "A. Ilmu yang mempelajari peristiwa di masa lalu", "value": "a" },
+            { "label": "B. Ilmu yang mempelajari kejadian dimasa kini", "value": "b" },
+            { "label": "C. Ilmu yang mempelajari kehidupan alam semesta", "value": "c" },
+            { "label": "D. Ilmu yang mempelajari kisah masa depan", "value": "d" },
+            { "label": "E. Ilmu yang mempelajari keagamaan", "value": "e" }
+        ],
+        "answer": "a"
+    },
+    {
+        "question": "2. Perhatikan gambar-gambar dibawah ini:<br><br>1. <img src='gambar1.png'><br>2. <img src='gambar2.png'><br>3. <img src='gambar3.png'><br>4. <img src='gambar4.png'><br>5. <img src='gambar5.png'><br><br>Dari gambar diatas merupakan sumber sejarah yang ditemukan di Indonesia, manakah yang termasuk sumber tertulis…",
+        "options": [
+            { "label": "A. 1", "value": "a" },
+            { "label": "B. 2", "value": "b" },
+            { "label": "C. 3", "value": "c" },
+            { "label": "D. 4", "value": "d" },
+            { "label": "E. 5", "value": "e" }
+        ],
+        "answer": "d"
+    },
+    {
+        "question": "3. Pembagian waktu dalam sejarah adalah penting dalam kontinuitas dimensional waktu yang lalu, sekarang dan masa yang akan datang. Dengan demikian, ilmu sejarah mempelajari segala peristiwa yang terjadi dalam waktu ...",
+        "options": [
+            { "label": "A. Sepanjang waktu", "value": "a" },
+            { "label": "B. Waktu secara berkelanjutan", "value": "b" },
+            { "label": "C. Waktu yang lalu sampai sekarang", "value": "c" },
+            { "label": "D. Waktu yang lalu", "value": "d" },
+            { "label": "E. Waktu yang akan datang", "value": "e" }
+        ],
+        "answer": "c"
+    },
+    {
+        "question": "4. Pertempuran Morotai terjadi pada tanggal 15 September 1944 pada akhir Perang Dunia II. Pertempuran dimulai ketika tentara Amerika Serikat dan Australia mendarat di Morotai bagian barat daya. Basis di Morotai dibutuhkan untuk membebaskan Filipina. Jumlah tentara yang menyerang jauh lebih banyak dari Jepang. Bantuan Jepang mendarat pada Oktober dan November, tetapi kekurangan persediaan untuk menyerang Sekutu. Pertempuran terus berlanjut hingga akhir perang, dengan tentara Jepang menderita korban jiwa yang besar akibat penyakit dan kelaparan. Beberapa prajurit Jepang di sana masih terus bertahan dan menolak menyerah.<br><br>Peristiwa sejarah tersebut menunjukan konsep berfikir diakronik karena",
+        "options": [
+            { "label": "A. Pertempuran Morotai diuraikan memanjang dalam waktu tetapi terbatas dalam ruang", "value": "a" },
+            { "label": "B. Pertempuran Morotai diuraikan dalam aspek sosial budaya", "value": "b" },
+            { "label": "C. Terjadi perubahan yang terjadi mendorong kemerdekaan Indonesia", "value": "c" },
+            { "label": "D. Keberlanjutan pertempuran morotai membangkitkan sikap nasionalisme", "value": "d" },
+            { "label": "E. Peristiwa tersebut merupakan peristiwa yang terjadi berulang", "value": "e" }
+        ],
+        "answer": "a"
+    },
+    {
+        "question": "5. Sejarah mengenal beberapa sumber sejarah yang dijadikan sebagai acuan dalam melakuakan kajian terhadap peristiwa sejarah. Berdasarkan tingkat penyampaiannya, sumber sejarah dibagi menjadi sumber primer, sekunder dan tersier. Adapun sumber primer adalah…",
+        "options": [
+            { "label": "A. Informasi yang diperoleh dari pelaku atau saksi sejarah", "value": "a" },
+            { "label": "B. Informasi yang diperoleh dari sumber rekaman", "value": "b" },
+            { "label": "C. Informasi yang diperoleh dari pihak ketiga", "value": "c" },
+            { "label": "D. Informasi yang diperoleh dari buku sejarah", "value": "d" },
+            { "label": "E. Informasi yang diperoleh dari media sosial", "value": "e" }
+        ],
+        "answer": "a"
+    },
+    {
+        "question": "6. Bila Anda seorang peneliti, dan setelah Anda berhasil mengumpulkan sumber-sumber sejarah, maka langkah selanjutnya yang harus Anda lakukan adalah ....",
+        "options": [
+            { "label": "A. Menjaga keaslian sumber sejarah", "value": "a" },
+            { "label": "B. Menafsirkan sumber sejarah", "value": "b" },
+            { "label": "C. Menentukan topik penelitian", "value": "c" },
+            { "label": "D. Menulis sejarah/historiografi", "value": "d" },
+            { "label": "E. Memverifikasi sumber sejarah", "value": "e" }
+        ],
+        "answer": "e"
+    },
+    {
+        "question": "7. Dalam kepercayaan Animisme masyarakat pendukungnya percaya bahwa nenek moyang mereka yang telah meninggal akan hidup lagi dan arwahnya bersemayam dipuncak gunung. Masyarakat di daerah dataran rendah yang daerahnya tidak berpegunungan biasanya membuat bangunan tinggi semacam gunung. Hasil kebudayaan Megalithikum yang dapat memberikan petunjuk pernyataan tersebut adalah…",
+        "options": [
+            { "label": "A. Dolmen", "value": "a" },
+            { "label": "B. Menhir", "value": "b" },
+            { "label": "C. Waruga", "value": "c" },
+            { "label": "D. Sarkopargus", "value": "d" },
+            { "label": "E. Punden Berundak", "value": "e" }
+        ],
+        "answer": "e"
+    },
+    {
+        "question": "8. Dalam masa praaksara Indonesia, corak kebudayaan dengan cara berburu dan mengumpulkan makanan dibagi menjadi dua masa yaitu…",
+        "options": [
+            { "label": "A. Masa berburu dan mengumpulkan makanan primer dan masa berburu mengumpulkan makanan sekunder", "value": "a" },
+            { "label": "B. Masa berburu dan mengumpulkan makanan tradisional dan masa berburu untuk mengumpulkan makanan modern", "value": "b" },
+            { "label": "C. Masa berburu dan mengumpulkan makanan tingkat sederhana dan masa berburu dan mengumpulkan makanan tingkat lanjut", "value": "c" },
+            { "label": "D. Masa berburu dan mengumpulkan makanan pokok dan masa mengumpulkan makanan tambahan", "value": "d" },
+            { "label": "E. Masa berburu dan mengumpulkan makanan tingkat dasar dan masa berburu mengumpulkan makanan tingkat tinggi", "value": "e" }
+        ],
+        "answer": "c"
+    },
+    {
+        "question": "9. Agama Hindu-Buddha masuk ke Indonesia dibawa oleh orang-orang India yang datang ke Indonesia. Namun dari beberapa teori masuknya Hindu-Buddha tersebut terdapat teori yang paling berpengaruh yaitu…",
+        "options": [
+            { "label": "A. Teori Brahmana", "value": "a" },
+            { "label": "B. Teori Waisya", "value": "b" },
+            { "label": "C. Teori Ksatria", "value": "c" },
+            { "label": "D. Teori Sudra", "value": "d" },
+            { "label": "E. Teori Arus Balik", "value": "e" }
+        ],
+        "answer": "e"
+    },
+    {
+        "question": "10. Pada masa raja Balaputera Dewa, Sriwijaya berkembang pesat dan mencapai zaman keemasan, kerajaan maritim ini memiliki wilayah yang luas. Raja Balaputra Dewa sendiri merupakan keturunan Dinasti Syailendra Mataram yang memerintah di pulau Jawa yaitu putera dari Raja Samaratungga. Mengapa Raja Balaputera Dewa mendirikan kerajaan Sriwijaya tetapi tidak meneruskan tahta di kerajaan Mataram….",
+        "options": [
+            { "label": "A. Berselisih dengan kakak iparnya Rakai Pikatan", "value": "a" },
+            { "label": "B. Tidak adanya kesepakatan dalam kerjaan", "value": "b" },
+            { "label": "C. Karena adanya perbedaan Agama", "value": "c" },
+            { "label": "D. Diberi wilayah kekuasaan baru", "value": "d" },
+            { "label": "E. Menjauhkan diri dari keluarga", "value": "e" }
+        ],
+        "answer": "a"
+    },
+    {
+        "question": "11. Di daerah Maluku terdapat dua kerajaan yang terkenal yaitu kerajaan Ternate dan Tidore. Kedua kerajaan tersebut saling bersaing dan saling membentuk persekutuan yaitu Uli Lima yang dipimpin kerajaan Ternate, dan Uli Siwa yang dipimpin oleh kerajaan Tidore. Persaingan kedua kerajaan dalam aspek ekonomi tersebut berkaitan dengan ... .",
+        "options": [
+            { "label": "A. Produktifitas rempah-rempah dan perdagangan", "value": "a" },
+            { "label": "B. Upaya menjalin kerja sama dengan bangsa asing", "value": "b" },
+            { "label": "C. Perlawanan terhadap pengaruh bangsa asing", "value": "c" },
+            { "label": "D. Menghadapi ancaman serangan bangsa Portugis", "value": "d" },
+            { "label": "E. Penguasaan daerah kaya pertambangan batu akik", "value": "e" }
+        ],
+        "answer": "a"
+    },
+    {
+        "question": "12. Pasca Perang Salib dan dikuasainya Konstantinopel oleh orang Islam perdagangan rempah-rempah mengalami penurunan, dan harga rempah-rempah melambung tinggi bagaikan harga emas (gold). Hal ini mendorong bangsa-bangsa Eropa mencari terobosan baru dengan melakukan penjelajahan samudra untuk mencari pusat rempah-rempah di “dunia timur”. Kedatangan bangsa-bangsa barat di dunia timur selain didorong oleh kepentingan ekonomi juga dipengaruhi perkembangan ilmu pengetahuan tentang teori Coppernicus yaitu ...",
+        "options": [
+            { "label": "A. Penemuan kompas yang berfungsi sebagai penunjuk arah", "value": "a" },
+            { "label": "B. Perkembangan iptek di bidang navigasi atau perkapalan", "value": "b" },
+            { "label": "C. Berkembangnya teori yang menyatakan bumi itu bulat", "value": "c" },
+            { "label": "D. Perkembangan pengetahuan astronomi atau perbintangan", "value": "d" },
+            { "label": "E. Penemuan mesin motor sebagai penggerak baling-baling kapal", "value": "e" }
+        ],
+        "answer": "c"
+    },
+    {
+        "question": "13. Imperialisme kuno adalah faham atau hasrat untuk menguasai wilayah dan bangsa lain. Imperilisme ini yang dimotori oleh Portugis dan Spanyol berlangsung sebelum terjadinya industrialisasi di negara-negara Eropa barat. Imperialisme yang muncul sebagai akibat dari terputusnya hubungan dagang antara Eropa dan Timur Tengah ini didasarkan pada semboyan gold, glory dan gospel. Semboyan tersebut memiliki arti ...",
+        "options": [
+            { "label": "A. Mencari kekayaan, kejayaan dan penyebaran agama", "value": "a" },
+            { "label": "B. Berani datang, melakukan perang dan mencari kemenangan", "value": "b" },
+            { "label": "C. Mencari bahan mentah, menanam investasi dan daerah pemasaran", "value": "c" },
+            { "label": "D. Melaksanakan monopoli, melakukan perjanjian dan menaklukkan", "value": "d" },
+            { "label": "E. Penguasaan di bidang ekonomi, politik, dan kepercayaan (religi)", "value": "e" }
+        ],
+        "answer": "a"
+    },
+    {
+        "question": "14. VOC berkuasa dan melaksanakan monopoli perdagangan di Indonesia selama dua abad yaitu dari tahun 1602 hingga tanggal 31 Desember 1799. Dengan hak oktroinya, VOC menjadi kongsi dagang yang sangat kuat dan mampu bersaing dengan pedagang-pedagang asing lainnya maupun pedagang nusantara. Kehebatan VOC ini ternyata pada akhir abad 18 menjadi pudar. VOC mengalami kerugian besar yaitu dengan hutang 136,7 juta gulden. Banyak faktor yang menyebabkan VOC mengalami kemunduran, pada akhirnya kongsi dagang itu dibubarkan. Faktor politis yang sekaligus faktor utama kongsi dagang Belanda tersebut dibubarkan yaitu ...",
+        "options": [
+            { "label": "A. Banyak biaya peperangan contoh perang melawan Hasanuddin dari Gowa", "value": "a" },
+            { "label": "B. Besarnya gaji yang harus dibayarkan kepada pegawai yang banyak", "value": "b" },
+            { "label": "C. Pembayaran Devident atau keuntungan bagi pemegang saham", "value": "c" },
+            { "label": "D. Perubahan pemerintahan di Belanda yang demokratis dan liberalis", "value": "d" },
+            { "label": "E. Banyaknya pegawai-pegawai yang melakukan korupsi", "value": "e" }
+        ],
+        "answer": "d"
+    },
+    {
+        "question": "15. Pemerintah negeri Belanda boneka Perancis di bawah pemerintahan Louis Napoleon, kemudian memerintahkan Herman Willem Daendels menjadi gubernur jenderal yang bertugas mempertahankan wilayah bekas kekuasaan VOC (Jawa) dari serangan Inggris. Berkaitan dengan tugasnya Daendels mengeluarkan kebijakan antara lain yaitu ....",
+        "options": [
+            { "label": "A. Membangun dua pelabuhan laut di Surabaya dan Banten", "value": "a" },
+            { "label": "B. Menjual tanah kepada kepada orang-orang swasta atau partikelir", "value": "b" },
+            { "label": "C. Mengangkat raja lokal menjadi pegawai pemerintah kolonial Belanda", "value": "c" },
+            { "label": "D. Mendirikan kota Mesteer Cornelis dan Wletervraden, serta istana Bogor", "value": "d" },
+            { "label": "E. Membangun Pelabuhan, Pabrik Senjata dan membangun jalan pos dari Anyer – Panarukan", "value": "e" }
+        ],
+        "answer": "e"
+    },
+    {
+        "question": "16. Indonesia merupakan daerah yang kaya akan rempah-rempah sehingga menjadi perebutan negara-negara sebagai daerah jajahan. Hal ini juga terjadi di antara Spanyol dan Portugis akhirnya keduanya menandatangi perjanjian Saragosa pada tahun 1529. Salah satu kesepakatan yang harus dijalankan berdasarkan perjanjian tersebut adalah…",
+        "options": [
+            { "label": "A. Spanyol berhak menguasai Maluku", "value": "a" },
+            { "label": "B. Portugis berhak menguasai Malaka", "value": "b" },
+            { "label": "C. Portugis berhak menguasai Maluku", "value": "c" },
+            { "label": "D. Spanyol berhak menguasai Malaka", "value": "d" },
+            { "label": "E. Keduanya berhak menguasai Maluku", "value": "e" }
+        ],
+        "answer": "c"
+    },
+    {
+        "question": "17. Pelaksanaan politik Tanam-Paksa (th 1830-th 1870) membawa keuntungan yang sangat besar bagi pemerintah Belanda. Sebaliknya bagi rakyat Indonesia pelaksanaan Tanam-Paksa secara umum menbawa penderitaan lahir maupun batin bagi rakyat Indonesia. Namun demikian, ada nilai-nilai yang positif bagi rakyat Indonesia yaitu ....",
+        "options": [
+            { "label": "A. Kemakmuran rakyat meningkat dari hasil tanaman kopi", "value": "a" },
+            { "label": "B. Memperoleh kesempatan dalam memasarkan hasil tanam paksa", "value": "b" },
+            { "label": "C. Mengenal sistem kontrak tanah yang akan ditanami jenis tanaman", "value": "c" },
+            { "label": "D. Memperoleh pengalaman dalam mengawasi para buruh diperkebunan", "value": "d" },
+            { "label": "E. Mengenal berbagai jenis tanaman baru yang menjadi komoditas ekspor", "value": "e" }
+        ],
+        "answer": "e"
+    },
+    {
+        "question": "18. Atas peran Ahmad Subardjo, ketegangan antara Golongan Tua dan Golongan Pemuda di Rengasdengklok pada akhirnya dapat diselesaikan. Tokoh yang bekerja di kantor Angkatan Laut Jepang yang memiliki hubungan dekat dengan Laksamana Maeda ini berhasil meyakinkan kedua belah pihak bahwa kemerdekaan Indonesia sebagaimana yang dikehendaki baik oleh golongan pemuda maupun golongan tua dalam waktu yang secepatnya akan bisa terwujud. Akhirnya mereka bersama-sama kembali ke Jakarta menuju ke rumah Laksamana Tadashi Maeda untuk mengadakan pertemuan dalam merumuskan teks proklamasi kemerdekaan. Penggunaan rumah Laksamana Tadashi Maeda sebagai tempat pertemuan didasarkan atas pertimbangan antara lain ....",
+        "options": [
+            { "label": "A. Telah mendapat ijin dari angkatan darat", "value": "a" },
+            { "label": "B. Ruangannya dapat menampung orang banyak", "value": "b" },
+            { "label": "C. Rumahnya netral dari intervensi angkatan darat", "value": "c" },
+            { "label": "D. Jepang telah mewujudkan janji pemberian kemerdekaan", "value": "d" },
+            { "label": "E. Rumah Tadashi Maeda di tepi jalan raya Bonjol Jakarta", "value": "e" }
+        ],
+        "answer": "c"
+    },
+    {
+        "question": "19. Setelah peristiwa Pengasdengklok Soekarno-Hatta dijemput untuk Kembali ke Jakarta. Disana mereka menetapkan di rumah Laksamana Maeda untuk dijadikan tempat untuk melaksanakan perumusan teks Proklamasi. Teks Proklamsi di konsep oleh Soekarno, Mohammad Hatta dan Ahmad Subarjo dan kemudia di ketik oleh…",
+        "options": [
+            { "label": "A. Wikana", "value": "a" },
+            { "label": "B. Sayuti Melik", "value": "b" },
+            { "label": "C. Sukarni", "value": "c" },
+            { "label": "D. B.M Diah", "value": "d" },
+            { "label": "E. Chairul Saleh", "value": "e" }
+        ],
+        "answer": "b"
+    },
+       {
+        "question": "20. Pada tanggal 19 Agustus 1945 diadakan rapat PPKI yang pertama rapat yaitu tentang menentukan dasar negara yang tercantum dalam…",
+        "options": [
+            { "label": "A. NKRI", "value": "a" },
+            { "label": "B. GBHN", "value": "b" },
+            { "label": "C. Pancasila", "value": "c" },
+            { "label": "D. Bhineka Tunggal Ika", "value": "d" },
+            { "label": "E. Pembukaan UUD 1945", "value": "e" }
+        ],
+        "answer": "c"
+    },
+    {
+        "question": "21. \"Pemindahan kekuasaan d.l.l. dilaksanakan dalam tempo yang sesingkat-singkatnya\", merupakan sebagian dari isi proklamasi kemerdekaan Indonesia. Makna dari pernyataan tersebut adalah ….",
+        "options": [
+            { "label": "A. Dalam waktu yang singkat bangsa Indonesia harus mengambil alih semua aset Jepang yang ada di Indonesia.", "value": "a" },
+            { "label": "B. Pemerintah pendudukan Jepang hanya merupakan salah satu mata rantai lahirnya negara baru Indonesia.", "value": "b" },
+            { "label": "C. Kemerdekaan Indonesia diperoleh dengan perjuangan bangsa Indonesia sendiri tanpa bantuan negara lain.", "value": "c" },
+            { "label": "D. Dimulainya revolusi Indonesia karena dengan proklamasi perlu dilakukan perubahan mendasar terhadap ketatanegaraan.", "value": "d" },
+            { "label": "E. Indonesia sebagai negara merdeka harus segera meminta pengakuan internasional.", "value": "e" }
+        ],
+        "answer": "b"
+    },
+    {
+        "question": "22. Setelah terjadi kesepakatan di Rengasdengklok, Sukarno-Hatta dan golongan pemuda bersama-sama menuju Jakarta untuk melakukan rapat koordinasi mempersiapkan rencana pelaksanaan kemerdekaan. Sebelum rapat dimulai, Sukarno dan Hatta menemui Jenderal Nishimura sebagai upaya untuk menjajaki sikap Jepang. Soekarno-Hatta mengajukan pertanyaan “bagaimana kalau besok pagi bangsaku melaksanakan kemerdekaan?”, Jenderal Nishimura menjawab “kami akan tetap mempertahankan status quo”. Kemudian Bersama-sama melaksanakan perumusan teks proklamasi. Dari teks diatas dapat diketahui fakta mengenai kemerdekaan Indonesia…",
+        "options": [
+            { "label": "A. Kemerdekaan Indonesia merupakan pemberian Jepang", "value": "a" },
+            { "label": "B. Kemerdekaan Indonesia merupakan keinginan sendiri", "value": "b" },
+            { "label": "C. Kemerdekaan Indonesia merupakan janji Jepang", "value": "c" },
+            { "label": "D. Kemerdekaan Indonesia merupakan kejadian tidak terduga", "value": "d" },
+            { "label": "E. Kemerdekaan Indonesia merupakan hasil diplomasi", "value": "e" }
+        ],
+        "answer": "b"
+    },
+    {
+        "question": "23. Pada tanggal 19 Desember 1948 beberapa saat sebelum kota Yogyakarta digempur kolonial Belanda dalam Agresi Militer II, Presiden Sukarno memberi mandat kepada Menteri Kemakmuran Mr. Syafrudin Prawiranegara untuk membentuk PDRI (Pemerintah Darurat Republik Indonesia) di Bukit Tinggi Sumatra Barat. Jika Syafrudin mengalami kegagalan, Presiden Sukarno mengantisipasi dengan memberikan mandat yang sama kepada AA Maramis dan LN Palar yang ketika itu sedang berada di India. Pemberian mandat yang dikeluarkan Presiden Sukarno tersebut bertujuan untuk...",
+        "options": [
+            { "label": "A. Melatih ketrampilan tokoh-tokoh tersebut menjadi kepala pemerintahan", "value": "a" },
+            { "label": "B. Mengecoh kolonial Belanda bahwa pusat pemerintahan RI telah dipindah", "value": "b" },
+            { "label": "C. Menunjukkan kepada Belanda bahwa Sukarno bukan kepala pemerintahan lagi", "value": "c" },
+            { "label": "D. Kelangsungan pemerintahan RI jika dirinya ditawan kolonial Belanda", "value": "d" },
+            { "label": "E. Tokoh-tokoh tersebut dapat berkomunikasi dengan mediator yang dibentuk PBB", "value": "e" }
+        ],
+        "answer": "d"
+    },
+    {
+        "question": "24. Konferensi Den Haag (KMB) merupakan akhir dari serangkaian perundingan-perundingan dalam menyelesaikan konflik Indonesia-Belanda pada masa revolusi nasional Indonesia. Dampak konferensi tersebut terjadinya perubahan bentuk negara Indonesia menjadi... .",
+        "options": [
+            { "label": "A. Negara Serikat", "value": "a" },
+            { "label": "B. Negara Federal", "value": "b" },
+            { "label": "C. Negara Kesatuan", "value": "c" },
+            { "label": "D. Negara Monarkhi", "value": "d" },
+            { "label": "E. Negara Republik", "value": "e" }
+        ],
+        "answer": "b"
+    },
+    {
+        "question": "25. Setelah proklamasi kemerdekaan Indonesia, perjuangan bangsa Indonesia belum berakhir. Selain ancaman dari pihak asing yang ingin kembali menjajah, bangsa Indonesia menghadapi ancaman dari dalam bangsa Indonesia sendiri. Salah satunya Gerakan komunis yang ingin mendirikan negara komunis Indonesia. Partai Komunis Indonesia sudah melakukan pemberontakan berulang kali sejak tahun 1928. Puncaknya terjadi pada peristiwa G30S/PKI. Bahaya komunis juga dianggap sebagai bahaya laten yang harus diwaspadai. Hal mendasar yang menyebabkan paham komunis tidak sesuai dengan kepribadian bangsa Indonesia yang Pancasilais adalah…",
+        "options": [
+            { "label": "A. Komunisme paham yang sesat", "value": "a" },
+            { "label": "B. Komunisme sering melakukan perusakan", "value": "b" },
+            { "label": "C. Pancasila merupakan ide presiden Sukarno", "value": "c" },
+            { "label": "D. Komunisme menginginkan bentuk negara komunis", "value": "d" },
+            { "label": "E. Komunisme bersifat tidak mengakui keberadaan Tuhan Yang Maha Esa", "value": "e" }
+        ],
+        "answer": "e"
+    },
+    {
+        "question": "26. Gerakan separatis yang merupakan “bom waktu” yang ditinggalkan kolonial Belanda di Indonesia yaitu gerakan separatis yang dipimpin oleh Westerling, Andi Azis, dan Soumokil. Ketiga gerakan tersebut pada dasarnya memiliki kesamaan, yaitu ... .",
+        "options": [
+            { "label": "A. Mempertahankan tetap berdirinya negara federal", "value": "a" },
+            { "label": "B. Sama-sama menolak terbentuknya negara federal", "value": "b" },
+            { "label": "C. Menuntut penggabungan negara federal ke NKRI", "value": "c" },
+            { "label": "D. Tidak dapat menerima hasil Perundingan Renville", "value": "d" },
+            { "label": "E. Ingin menanamkan ideologi komunis di Indonesia", "value": "e" }
+        ],
+        "answer": "a"
+    },
+    {
+        "question": "27. Pada masa pemerintahan kabinet Ali Sastroamidjojo I (Agustus 1954 - Agustus 1955), menteri perekonomian Mr. Iskaq Cokrohadisuryo memperkenalkan sistem ekonomi baru yang dikenal dengan sistem Ali-Baba. Sistem ekonomi kolaboratif ini bertujuan … .",
+        "options": [
+            { "label": "A. Mengembangkan sektor pertanian dan perkebunan", "value": "a" },
+            { "label": "B. Memajukan pengusaha-pengusaha nasional", "value": "b" },
+            { "label": "C. Usaha mengurangi impor dan meningkatkan ekspor", "value": "c" },
+            { "label": "D. Meningkatkan pesaingan pengusaha nasional dan Cina", "value": "d" },
+            { "label": "E. Memperkokoh kolaborasi pengusaha Ali dan Baba", "value": "e" }
+        ],
+        "answer": "b"
+    },
+    {
+        "question": "28. Lahirnya Dekrit Presiden 5 Juli 1959 adalah akumulasi dari berbagai krisis yang terjadi pada Jaman Demokrasi Liberal, Berikut ini adalah berbagai krisis yang mendorong dikeluarkannya Dekrit Presiden 1959, kecuali ....",
+        "options": [
+            { "label": "A. Negara Indonesia dalam keadaan bahaya", "value": "a" },
+            { "label": "B. Perubahan sistem Pemerintahan Presidential menjadi Parlementer", "value": "b" },
+            { "label": "C. Kondisi politik yang tidak stabil akibat pergantian kabinet yang cepat.", "value": "c" },
+            { "label": "D. Kegagalan Badan Konstituante merumuskan UUD baru sebagai ganti UUD 1950", "value": "d" },
+            { "label": "E. Terjadinya gerakan gerakan Separatis di daerah daerah mengancam keutuhan NKRI", "value": "e" }
+        ],
+        "answer": "b"
+    },
+    {
+        "question": "29. Perhatikan informasi berikut ini : Dalam menghadapi konfrontasi dengan Belanda mengenai masalah Irian, Presiden Sukarno mengeluarkan Tri Komando Rakyat ( Trikora ); 1. Memperkuat ketahan revolusi Indonesia di Irian 2. Gagalkan pembentukan negara boneka Papua buatan Belanda 3. Meminta dukungan Uni Soviet untuk membebaskan Irian 4. Perjuangan total untuk pembebasan Irian 5. Bersiap untuk mobilisasi umum di Irian 6. Kibarkan sang merah putih di Irian Berikut ini yang termasuk isi Trikora ditunjukan oleh nomor ...",
+        "options": [
+            { "label": "A. 1), 2) dan 3)", "value": "a" },
+            { "label": "B. 1), 3) dan 5)", "value": "b" },
+            { "label": "C. 1), 4) dan 5)", "value": "c" },
+            { "label": "D. 2), 4) dan 6)", "value": "d" },
+            { "label": "E. 2), 5) dan 6)", "value": "e" }
+        ],
+        "answer": "d"
+    },
+    {
+        "question": "30. Lahirnya Supersemar dianggap sebagai dasar hukum pelaksanaan Orde Baru. Kemudian pada sidang MPRS, tanggal 23 Februari 1967, secara resmi presiden Soekarno menyerahkan jabatan kekuasaan pemerintahan kepada pengemban Supersemar. Dengan demikian dimulailah pemerintahan Orde baru di Indonesia yang sejak awal lahirnya dijiwai dengan semangat. …",
+        "options": [
+            { "label": "A. Menggalakkan pembangunan yang menguntungkan para konglomerat", "value": "a" },
+            { "label": "B. Pemerintahan yang anti terhadap korupsi, kolusi dan nepotisme", "value": "b" },
+            { "label": "C. Melaksanakan Pancasila dan UUD 1945 secara murni dan konsekuen", "value": "c" },
+            { "label": "D. Menghasilkan Undang-undang yang membatasi ruang gerak partai politik", "value": "d" },
+            { "label": "E. Melaksanakan demokrasi secara menyeluruh", "value": "e" }
+        ],
+        "answer": "c"
+    },
+    {
+        "question": "31. Dalam rangka menciptakan kondisi politik yang stabil dan kondusif, pemerintah orde baru pada tahun 1973 mengeluarkan kebijakan tentang penyederhanaan partai-partai politik. Kebijakan ini untuk mengantisipasi kekuatan-kekuatan politik yang secara historis dinilai berpotensi mengganggu stabilitas dan merongrong kewibawaan pemerintah. Untuk mewujudkan kebijakan politik tersebut, cara yang dilakukan pemerintah yaitu ... .",
+        "options": [
+            { "label": "A. Membentuk sekber golongan karya", "value": "a" },
+            { "label": "B. Partai lama di-marger menjadi 2 partai", "value": "b" },
+            { "label": "C. Masyarakat bebas membentuk parpol", "value": "c" },
+            { "label": "D. Menjadikan Golkar sebagai partai tunggal", "value": "d" },
+            { "label": "E. Membubarkan semua partai politik", "value": "e" }
+        ],
+        "answer": "b"
+    },
+    {
+        "question": "32. Pada masa orde baru, ABRI selain berperan di bidang pertahanan dan keamanan, juga berperan di bidang sosial politik. Perangkapan peran ABRI tersebut dikenal yaitu ... .",
+        "options": [
+            { "label": "A. Dwifungsi ABRI", "value": "a" },
+            { "label": "B. ABRI Manunggal", "value": "b" },
+            { "label": "C. Sapta marga", "value": "c" },
+            { "label": "D. Eka Prasetya", "value": "d" },
+            { "label": "E. Pancakrida", "value": "e" }
+        ],
+        "answer": "a"
+    },
+    {
+        "question": "33. Berikut adalah beberapa faktor ekonomi penyebab terjadinya krisis ekonomi menjelang kejatuhan pemerintah Orde Baru dan menjadi awal masa Reformasi, Kecuali ...",
+        "options": [
+            { "label": "A. Pemerintah Indonesia gagal mengatasi krisis moneter yang melanda Dunia sejak tahun 1996 yang mengakibatkan nilai rupiah terus melemah terhadap dolar", "value": "a" },
+            { "label": "B. Pembangunan Proyek Proyek Raksasa (Mega Proyek) sudah menghabiskan dana besar sehingga mengakibatkan anggaran negara mengalami defisit setiap tahunnya.", "value": "b" },
+            { "label": "C. Pondasi Pembangunan Ekonomi Indonesia pada masa Orde Baru adalah bersumber dari hutang Luar Negeri.", "value": "c" },
+            { "label": "D. Pelaksanaan pembangunan ekonomi pada masa Orde Baru menyimpang dari landasan Ekonomi Indonesia seperti yang diatur dalam pasal 33 UUD 1945.", "value": "d" },
+            { "label": "E. Ketidakpuasan rakyat dan pemerintah daerah akibat Pola pemerintahan yang sentralistik mengakibatkan banyak kekayaan dari daerah yang disedot oleh pemerintah pusat.", "value": "e" }
+        ],
+        "answer": "a"
+    },
+    {
+        "question": "34. ASEAN adalah organisasi regional bangsa-bangsa Asia Tenggara yang bergerak di bidang ekonomi, geopolitik dan budaya. Dalam kegiatan ASEAN tersebut Indonesia mampu memainkan peran sebagai pemimpin Asia Tenggara, terutama pada masa pemerintahan Presiden Soeharto. Indonesia memiliki peranan yang cukup penting di dalam perkembangan ASEAN, di mana Indonesia merupakan salah satu penentu arah perkembangan organisasi tersebut. Contoh peran Indonesia dalam ASEAN menjadi penengah saat terjadinya konflik antara Kamboja dan Vietnam tahun 1987. Konflik ini dapat diselesaikan melalui Konferensi Paris tahun 1991 di mana kedua negara menyepakati adanya perjanjian damai. Dari deskripsi tersebut dapat disimpulkan bahwa Indonesia…",
+        "options": [
+            { "label": "A. Dapat menyelesaikan konflik yang terjadi di berbagai dunia", "value": "a" },
+            { "label": "B. Mampu menciptakan perdamaian di kawasan Asia Tenggara", "value": "b" },
+            { "label": "C. Dapat menyelesaikan permasalahan ASEAN tanpa bantuan asing", "value": "c" },
+            { "label": "D. Bekerjasama dengan negara lain dalam mewujudkan kesejahteraan", "value": "d" },
+            { "label": "E. Mampu mewujudkan suatu stabilatas nasional melalui keadilan", "value": "e" }
+        ],
+        "answer": "b"
+    },
+    {
+        "question": "35. Dalam turut serta menciptakan perdamaian dunia, pemerintah Indonesia melalui Presiden Sukarno menjadi salah satu penggagas berdirinya Gerakan Non Blok. Organisasi negara-negara berkembang yang berhasil melaksanakan konferensi pertama di Beograd, Yugoslavia, tahun 1961 tersebut bertujuan ... .",
+        "options": [
+            { "label": "A. Menggalang kekuatan bersama dengan blok timur", "value": "a" },
+            { "label": "B. Menggalang kekuatan bersama dengan blok barat", "value": "b" },
+            { "label": "C. Menjadi pesaing antara kedua blok (barat dan timur)", "value": "c" },
+            { "label": "D. Meredakan ketegangan antara blok barat dan timur", "value": "d" },
+            { "label": "E. Menandingi kekuatan blok barat maupun blok timur", "value": "e" }
+        ],
+        "answer": "d"
+    },
+    {
+        "question": "36. Pada tahun 2003 Indonesia menjadi negara terkorup, menduduki peringkat ke-6 dari dari 133 negara di dunia. Pemerintahan Presiden Megawati Soekarno Puteri bertekad memberantas korupsi di Indonesia dengan realisasinya adalah....",
+        "options": [
+            { "label": "A. Mengangkat MA Rachman sebagai Jaksa Agung pembrantas Korupsi", "value": "a" },
+            { "label": "B. Mengangkat Jaksa Agung yang menangani Pidana Khusus", "value": "b" },
+            { "label": "C. Membentuk Komisi Khusus Pemberantasan Korupsi", "value": "c" },
+            { "label": "D. Membentuk Badan Pemberantasan Korupsi Indonesia", "value": "d" },
+            { "label": "E. Mendirikan Komisi Pemberantasan Korupsi", "value": "e" }
+        ],
+        "answer": "e"
+    },
+    {
+        "question": "37. Pemerintahan Presiden Megawati Soekarno Putri merupakan peletak dasar ke arah kehidupan demokrasi, hal ini ditandai oleh keberhasilannya dalam melaksanakan Pemilu 2004 yang berlangsung secara aman dan damai. Pemilu tahun 2004 diselenggarakan dua kali, pemilu pertama diselenggarakan pada tanggal 5 April 2004 dan pemilu kedua diselenggarakan pada tanggal 5 Juli 2004 dan merupakan pemilu yang istimewa karena baru pertama kali diselenggarakan di Indonesia, yaitu ....",
+        "options": [
+            { "label": "A. Memilih partai politik yang akan menjadi wakil-wakil rakyat di DPR dan MPR", "value": "a" },
+            { "label": "B. Untuk pertama kalinya Presiden dan Wakil Presiden dipilih oleh wakil rakyat", "value": "b" },
+            { "label": "C. Memilih wakil-wakil rakyat untuk menduduki kursi DPR dan MPR", "value": "c" },
+            { "label": "D. Pemilihan para anggota legeslatif secara langsung oleh rakyat", "value": "d" },
+            { "label": "E. Presiden dan Wakil Presiden dipilih langsung oleh rakyat", "value": "e" }
+        ],
+        "answer": "e"
+    },
+    {
+        "question": "38. Masa pemerintahan Abdurahman Wahid harus berakhir akibat terjadi pemakzulan oleh DPR terhadap Gus Dur pada pertengahan Juli 2001 dengan dugaan melakukan korupsi pada skandal Brunei Gate dan Bulog Gate. Setelah pemakzulan itu, Megawati Soekarno Putri tampil menggantikan presiden melalui mekanisme sidang umum MPR. Dalam menunjang terlaksananya demokrasi Megawati menerbitkan undang-undang penting yang terkait dengan...",
+        "options": [
+            { "label": "A. Upaya pembasmian korupsi di kalangan birokrat", "value": "a" },
+            { "label": "B. Kesepakatan perdamaian dengan Gerakan Aceh Merdeka", "value": "b" },
+            { "label": "C. Kesepakatan dengan warga Buyat yang kena pencemaran", "value": "c" },
+            { "label": "D. Mengatur fungsi TNI dan Polri yang terpisah", "value": "d" },
+            { "label": "E. Pembentukan koalisi kebenaran dan rekonsiliasi", "value": "e" }
+        ],
+        "answer": "d"
+    },
+    {
+        "question": "39. Pada masa pemerintahan Presiden Soeharto pemerintah berusaha mengintegrasikan wilayah lain ke dalam wilayah Republik Indonesia, namun pada masa pemerintahan Presiden B.J.Habibie sampai tahun 1999 peristiwa besar yang kontroversial dalam kehidupan politik, berbangsa dan bernegara berkaitan dengan keutuhan NKRI adalah….",
+        "options": [
+            { "label": "A. Peristiwa Tragedi Semanggi yang membawa jatuhnya korban mahasiswa dan masyarakat", "value": "a" },
+            { "label": "B. Pemilu yang dilaksanakan secara demokratis jujur dan adil diikuti 48 partai politik", "value": "b" },
+            { "label": "C. Penghapusan program pelaksanaan Pedoman Penghayatan dan Pengamalan Pancasila", "value": "c" },
+            { "label": "D. Lepasnya Timor-Timur dari wilayah Negara Kesatuan Republik Indonesia propinsi ke-27", "value": "d" },
+            { "label": "E. Penghapusan Pancasila sebagai asas tunggal dalam berorganisasi politik dan sosial.", "value": "e" }
+        ],
+        "answer": "d"
+    },
+    {
+        "question": "40. Perhatikan istilah berikut ! 1. Kabinet gotong royong 2. Kabinet Indonesia Bersatu I 3. Kabinet Pembangunan Nasional 4. Kabinet Indonesia Bersatu II Dari pernyataan di atas nama kabinet yang dibentuk oleh pemerintahan Presiden Susilo Bambang Yudhoyono masa jabatan 2004-2009 dan masa jabatan 2009-2014 adalah....",
+        "options": [
+            { "label": "A. (1) dan (2)", "value": "a" },
+            { "label": "B. (1) dan (3)", "value": "b" },
+            { "label": "C. (2) dan (4)", "value": "c" },
+            { "label": "D. (2) dan (3)", "value": "d" },
+            { "label": "E. (3) dan (4)", "value": "e" }
+        ],
+        "answer": "c"
+    }
+    ];
+
+        let currentSet = 0;
+        const questionsPerSet = 5;
+        let userAnswers = [];
+
+        function displayQuestions(startIndex, endIndex) {
+            const quizContainer = document.getElementById('quizContainer');
+            quizContainer.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                if (i >= questions.length) break;
+
+                const q = questions[i];
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+
+                const questionText = document.createElement('h3');
+                questionText.innerHTML = q.question; // Menggunakan innerHTML untuk menampilkan gambar
+                questionDiv.appendChild(questionText);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('options');
+
+                q.options.forEach(option => {
+                    const label = document.createElement('label');
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `question${i}`;
+                    input.value = option.value;
+                    input.onclick = () => userAnswers[i] = option.value;
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(` ${option.label}`));
+                    optionsDiv.appendChild(label);
+                });
+
+                questionDiv.appendChild(optionsDiv);
+                quizContainer.appendChild(questionDiv);
+            }
+        }
+
+        function checkAnswers() {
+            const startIndex = currentSet * questionsPerSet;
+            const endIndex = startIndex + questionsPerSet;
+
+            for (let i = startIndex; i < endIndex; i++) {
+                if (i >= questions.length) break;
+
+                const selectedOption = document.querySelector(`input[name="question${i}"]:checked`);
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.classList.add('feedback');
+
+                if (selectedOption) {
+                    feedbackDiv.textContent = selectedOption.value === questions[i].answer ? 
+                        "Jawaban benar!" : `Jawaban salah! Benar: ${questions[i].answer.toUpperCase()}`;
+                    feedbackDiv.classList.add(selectedOption.value === questions[i].answer ? 'correct' : 'incorrect');
+                } else {
+                    feedbackDiv.textContent = "Anda belum memilih jawaban.";
+                    feedbackDiv.classList.add('incorrect');
+                }
+
+                document.querySelectorAll('.question')[i - startIndex].appendChild(feedbackDiv);
+            }
+
+            document.getElementById('submitButton').style.display = 'none';
+            document.getElementById('nextButton').style.display = 'block';
+        }
+
+        function loadNextSet() {
+            currentSet++;
+            const startIndex = currentSet * questionsPerSet;
+            const endIndex = startIndex + questionsPerSet;
+
+            if (startIndex >= questions.length) {
+                alert("Selamat! Semua soal selesai.");
+                return;
+            }
+
+            displayQuestions(startIndex, endIndex);
+            document.getElementById('submitButton').style.display = 'block';
+            document.getElementById('nextButton').style.display = 'none';
+        }
+
+        displayQuestions(0, questionsPerSet);
+    </script>
+</body>
+</html>
